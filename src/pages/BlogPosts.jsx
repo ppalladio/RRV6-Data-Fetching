@@ -13,6 +13,7 @@ const loaderData = useLoaderData()
         </>
     );
 }
+//' the page is only rendered when the info have arrived
 
 export default BlogPostsPage;
 
