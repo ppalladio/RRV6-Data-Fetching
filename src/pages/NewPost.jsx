@@ -1,22 +1,29 @@
-import { redirect, useNavigate } from 'react-router-dom';
+import {
+    redirect,
+    useNavigate,
+    useActionData,
+    useNavigation,
+} from 'react-router-dom';
 
 import NewPostForm from '../components/NewPostForm';
 import { savePost } from '../util/api';
 
 function NewPostPage() {
     const navigate = useNavigate();
-
+    const data = useActionData();
+    const navigation = useNavigation();
+    //#navigation gives more info about if our action and loader functions are doing some work and their status
     function cancelHandler() {
         navigate('/blog');
     }
 
     return (
         <>
+            {data && data.status && <p>{data.message}</p>}
             <NewPostForm
                 onCancel={cancelHandler}
                 //' onSubmit={submitHandler} we dont handle onsubmit manually
-
-                submitting={isSubmitting}
+                submitting={navigation.state === 'submitting'}
             />
         </>
     );
@@ -35,7 +42,7 @@ export async function action({ request }) {
         savePost(post);
     } catch (err) {
         if (err.status === 422) {
-            throw err;
+            return err;
         }
         throw err;
     }
